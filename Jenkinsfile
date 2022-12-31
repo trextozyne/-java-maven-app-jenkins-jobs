@@ -33,19 +33,21 @@ pipeline {
       }
     }
     stage('Deploy') {
-      input {
-        message "Select environment to deploy to"
-        ok "Done"
-        parameters {
-          choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')
-          choice(name: 'ENV-2', choices: ['dev', 'staging','prod'], description: '')
-        }
-      }
+      // input {
+      //   message "Select environment to deploy to"
+      //   ok "Done"
+      //   parameters {
+      //     choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')
+      //     choice(name: 'ENV-2', choices: ['dev', 'staging','prod'], description: '')
+      //   }
+      // }
       steps {
         script {
+          env.ENV = input message: "Select the environment to deploy in", ok: "Done", parameters:  choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')
+
           groovy.deployApp()
           echo "Deploying to ${ENV}"
-          echo "Deploying to ${ENV-2}"
+          // echo "Deploying to ${ENV-2}"
         }
         // deploy steps go here
       }
