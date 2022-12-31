@@ -43,7 +43,7 @@ pipeline {
       // }
       steps {
         script {
-          env.ENV = input message: "Select the environment to deploy in", ok: "Done", parameters:  choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')
+          env.ENV = input message: "Select the environment to deploy in", ok: "Done", parameters:  [choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')]
 
           groovy.deployApp()
           echo "Deploying to ${ENV}"
