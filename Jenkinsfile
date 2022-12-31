@@ -12,7 +12,7 @@ pipeline {
     stage('build') {
         when {
             expression {
-                BRANCH_NAME = 'master'  //variable only available i nmulti-branch setup
+                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
             }
         }
       steps {
@@ -24,7 +24,7 @@ pipeline {
     stage('Deploy') {
         when {
             expression {
-                BRANCH_NAME = 'master'  //variable only available i nmulti-branch setup
+                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
             }
         }
       steps {
