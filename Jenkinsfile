@@ -38,12 +38,14 @@ pipeline {
         ok "Done"
         parameters {
           choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')
+          choice(name: 'ENV-2', choices: ['dev', 'staging','prod'], description: '')
         }
       }
       steps {
         script {
           groovy.deployApp()
           echo "Deploying to ${ENV}"
+          echo "Deploying to ${ENV-2}"
         }
         // deploy steps go here
       }
