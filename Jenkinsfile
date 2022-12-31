@@ -6,7 +6,7 @@ pipeline {
     maven 'Maven'
   }
   stages {
-    stage ('init') {
+    stage('init') {
         groovy = load 'script.grovy'
     }
 
