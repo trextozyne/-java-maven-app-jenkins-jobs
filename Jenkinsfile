@@ -1,3 +1,4 @@
+
 pipeline {
   agent any
   parameters {
@@ -5,10 +6,18 @@ pipeline {
     booleanParam(name: 'executeTests', defaultValue: true, description: '')
   }
   stages {
+    stage('init') {
+      steps {
+        script {
+          groovy = load "script,groovy"
+        }
+      }
+    }
     stage('Build') {
       steps {
-        echo 'Building...'
-        // build steps go here
+        script {
+          groovy.buildApp
+        }
       }
     }
     stage('Test') {
@@ -18,14 +27,16 @@ pipeline {
             }
         }
       steps {
-        echo 'Testing...'
-        // test steps go here
+        script {
+          groovy.testApp
+        }
       }
     }
     stage('Deploy') {
       steps {
-        echo 'Deploying...'
-        echo "deploying version ${params.VERSION}"
+        script {
+          groovy.deployApp
+        }
         // deploy steps go here
       }
     }
