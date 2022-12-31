@@ -16,7 +16,7 @@ pipeline {
     stage('Build') {
       steps {
         script {
-          groovy.buildApp
+          groovy.buildApp()
         }
       }
     }
@@ -28,14 +28,14 @@ pipeline {
         }
       steps {
         script {
-          groovy.testApp
+          groovy.testApp()
         }
       }
     }
     stage('Deploy') {
       steps {
         script {
-          groovy.deployApp
+          groovy.deployApp()
         }
         // deploy steps go here
       }
