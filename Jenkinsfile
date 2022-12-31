@@ -33,9 +33,17 @@ pipeline {
       }
     }
     stage('Deploy') {
+      input {
+        message "Select environment to deploy to"
+        ok "Done"
+        parameters {
+          choice(name: 'ENV', choices: ['dev', 'staging','prod'], description: '')
+        }
+      }
       steps {
         script {
           groovy.deployApp()
+          echo 'Deploying to $ENV'
         }
         // deploy steps go here
       }
