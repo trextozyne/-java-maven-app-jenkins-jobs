@@ -25,7 +25,6 @@ pipeline {
             }
         // test steps go here
         }
-      }
     }
     stage('Deploy') {
       steps {
