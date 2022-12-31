@@ -7,7 +7,7 @@ pipeline {
   }
   stages {
     stage ('init') {
-        groovy - load 'script.grovy'
+        groovy = load 'script.grovy'
     }
 
     stage('build jar') {
