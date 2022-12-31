@@ -43,7 +43,7 @@ pipeline {
       steps {
         script {
           groovy.deployApp()
-          echo 'Deploying to $ENV'
+          echo "Deploying to ${ENV}"
         }
         // deploy steps go here
       }
