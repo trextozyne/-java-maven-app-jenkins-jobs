@@ -2,10 +2,11 @@ pipeline {
   agent none
   stages {
     stage('test') {
-      steps {
-        script {
-            echo 'Testing the application...'
-            echo 'executing pipeline for $BRANCH_NAME'
+        steps {
+            script {
+                echo 'Testing the application...'
+                echo 'executing pipeline for $BRANCH_NAME'
+            }
         }
     }
     stage('build') {
