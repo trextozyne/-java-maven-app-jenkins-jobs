@@ -1,35 +1,40 @@
+#!/usr/bin/env groovy
+
+@Library('jenkins-shared-library')//_ use it if no variable definition is defined afetr, its used for seperation from pipeline
+def groovy
+
 pipeline {
-  agent none
+  agent any
+  tools{
+    maven 'Maven'
+  }
   stages {
-    stage('test') {
-        steps {
-            script {
-                echo 'Testing the application...'
-                echo 'executing pipeline for $BRANCH_NAME'
-            }
-        }
-    }
-    stage('build') {
-        when {
-            expression {
-                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
-            }
-        }
+    stage('init') {
       steps {
         script {
-            echo 'Building the application...'
+          groovy = load 'script.groovy'
         }
       }
     }
-    stage('Deploy') {
-        when {
-            expression {
-                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
-            }
-        }
+
+    stage('build jar') {
       steps {
         script {
-            echo 'Deploying the application...'
+            buildJar()
+        }
+      }
+    }
+    stage('build image') {
+      steps {
+        script {
+            buildImage()
+        }
+    }
+    stage('Deploy') {
+      steps {
+        script {
+            groovy.deployAPP()
+            // deploy steps go here
         }
       }
     }
