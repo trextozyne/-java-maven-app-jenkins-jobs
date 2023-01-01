@@ -24,12 +24,15 @@ pipeline {
         }
       }
     }
+
     stage('build image') {
       steps {
         script {
             buildImage()
         }
+      }
     }
+
     stage('Deploy') {
       steps {
         script {
