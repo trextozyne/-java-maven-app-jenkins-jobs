@@ -29,6 +29,8 @@ pipeline {
       steps {
         script {
             buildImage 'trex1987/my-repo:jma-3.0'
+            dockerLogin()
+            dockerPush 'trex1987/my-repo:jma-3.0'
         }
       }
     }
