@@ -36,7 +36,7 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
-            groovy.deployAPP()
+            groovy.deployApp()
             // deploy steps go here
         }
       }
