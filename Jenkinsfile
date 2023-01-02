@@ -7,6 +7,7 @@ pipeline {
             steps {
                 script {
                     echo "Building the application..."
+                    echo "Building the integration test..."
                 }
             }
         }
