@@ -1,37 +1,66 @@
+#!/usr/bin/env groovy
+
 pipeline {
-  agent none
-  stages {
-    stage('test') {
-        steps {
-            script {
-                echo 'Testing the application...'
-                echo 'executing pipeline for $BRANCH_NAME'
+    agent any
+    tools {
+        maven 'Maven'
+    }
+    stages {
+        stage('increment version') {
+            steps {
+                script {
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
+                        versions:commit'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
+                }
             }
         }
-    }
-    stage('build') {
-        when {
-            expression {
-                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
+        stage('build app') {
+            steps {
+                script {
+                    echo "building the application..."
+                    sh 'mvn clean package' //make sure there is always only one jar package in the target to avoid messing with Docker build match name pattern
+                }
             }
         }
-      steps {
-        script {
-            echo 'Building the application...'
-        }
-      }
-    }
-    stage('Deploy') {
-        when {
-            expression {
-                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
+        stage('build image') {
+            steps {
+                script {
+                    echo "building the docker image..."
+                    withCredentials([usernamePassword(credentialsId: 'Dockerhub-repo', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                        sh "docker build -t trex1987/my-repo:${IMAGE_NAME} ."
+                        sh "echo $PASS | docker login -u $USER --password-stdin"
+                        sh "docker push trex1987/my-repo:${IMAGE_NAME}"
+                    }
+                }
             }
         }
-      steps {
-        script {
-            echo 'Deploying the application...'
+        stage('deploy') {
+            steps {
+                script {
+                    echo 'deploying docker image to EC2...'
+                }
+            }
         }
-      }
+//        stage('commit version update') {
+//            steps {
+//                script {
+//                    withCredentials([usernamePassword(credentialsId: 'gitlab-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+//                        // git config here for the first time run
+//                        sh 'git config --global user.email "jenkins@example.com"'
+//                        sh 'git config --global user.name "jenkins"'
+//
+//                        sh "git remote set-url origin https://${USER}:${PASS}@gitlab.com/the-rexy/java-maven-app-jenkins-jobs.git"
+//                        sh 'git add .'
+//                        sh 'git commit -m "ci: version bump"'
+//                        sh 'git push origin HEAD:jenkins-jobs'
+//                    }
+//                }
+//            }
+//        }
     }
-  }
 }
