@@ -1,42 +1,36 @@
 #!/usr/bin/env groovy
-def groovy
-
 pipeline {
-  agent any
-  tools{
-    maven 'Maven'
-  }
+  agent none
   stages {
-    stage('init') {
-      steps {
-        script {
-          groovy = load 'script.groovy'
-        }
-      }
-    }
-
-    stage('build jar') {
-      steps {
-        script {
-            groovy.buildJar()
-        // build steps go here
-        }
-      }
-    }
-    
-    stage('build image') {
-      steps {
-        script {
-            groovy.buildImage()
+    stage('test') {
+        steps {
+            script {
+                echo 'Testing the application...'
+                echo 'executing pipeline for $BRANCH_NAME'
             }
-        // test steps go here
         }
+    }
+    stage('build') {
+        when {
+            expression {
+                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
+            }
+        }
+      steps {
+        script {
+            echo 'Building the application...'
+        }
+      }
     }
     stage('Deploy') {
+        when {
+            expression {
+                BRANCH_NAME == 'master'  //variable only available i nmulti-branch setup
+            }
+        }
       steps {
         script {
-            groovy.deployAPP()
-            // deploy steps go here
+            echo 'Deploying the application...'
         }
       }
     }
