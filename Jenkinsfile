@@ -15,14 +15,6 @@ pipeline {
       }
     }
 
-    stage('build jar') {
-      steps {
-        script {
-            groovy.buildJar()
-        // build steps go here
-        }
-      }
-    }
     stage('build image') {
       steps {
         script {
