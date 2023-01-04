@@ -15,10 +15,19 @@ pipeline {
       }
     }
 
-    stage('build image') {
+    stage('build App') {
       steps {
         script {
-            groovy.buildImage()
+            groovy.buildApp()
+        // build steps go here
+        }
+      }
+    }
+
+    stage('test') {
+      steps {
+        script {
+            groovy.testApp()
             }
         // test steps go here
         }
@@ -26,7 +35,7 @@ pipeline {
     stage('Deploy') {
       steps {
         script {
-            groovy.deployAPP()
+            groovy.deployApp()
             // deploy steps go here
         }
       }
