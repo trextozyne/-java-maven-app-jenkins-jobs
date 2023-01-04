@@ -31,7 +31,7 @@ pipeline {
     stage('Test') {
         when {
             expression {
-                # find all this variables in  http://JENKINS_URL:8080/env-vars.html/
+                // find all this variables in  http://JENKINS_URL:8080/env-vars.html/
                 (env.BRANCH_NAME == 'dev' || BRANCH_NAME == 'master') && CODE_CHANGE == true && params.executeTests
             }
         }
