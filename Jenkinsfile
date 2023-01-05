@@ -57,6 +57,9 @@ pipeline {
 //                        sh 'git status'
 //                        sh 'git branch'
 //                        sh 'git config --list'
+
+//                        sh 'git pull --rebase origin HEAD:jenkins-jobs'
+//                        sh 'git push origin HEAD:jenkins-jobs'
 //
 //                        sh "git remote set-url origin https://${USER}:${PASS}@gitlab.com/the-rexy/java-maven-app-jenkins-jobs.git"
 //                        sh 'git add .'
@@ -72,13 +75,11 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'Gitlab-login', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
                         // git config here for the first time run on jenkins
                         //without user.email jenkins would complain there is no user email to attach to commit, set only once for jenkins lifetime
-                        sh "git config --global user.email 'jenkins@example.com'" // global for repository, without for local
-                        sh "git config --global user.name 'jenkins'"
-                        sh 'git status'
-                        sh 'git branch'
-                        sh 'git config --list'
-                        sh 'git pull --rebase origin HEAD:jenkins-jobs'
-                        sh 'git push origin HEAD:jenkins-jobs'
+//                        sh "git config --global user.email 'jenkins@example.com'" // global for repository, without for local
+//                        sh "git config --global user.name 'jenkins'"
+//                        sh 'git status'
+//                        sh 'git branch'
+//                        sh 'git config --list'
 
                         sh "git remote set-url origin https://${USER}:${PASS}@gitlab.com/the-rexy/java-maven-app-jenkins-jobs.git"
                         sh 'git add . -A'
