@@ -77,7 +77,7 @@ pipeline {
                         sh 'git status'
                         sh 'git branch'
                         sh 'git config --list'
-                        sh 'git pull origin HEAD:jenkins-jobs'
+                        sh 'git pull --rebase origin HEAD:jenkins-jobs'
                         sh 'git push origin HEAD:jenkins-jobs'
 
                         sh "git remote set-url origin https://${USER}:${PASS}@gitlab.com/the-rexy/java-maven-app-jenkins-jobs.git"
@@ -88,7 +88,5 @@ pipeline {
                 }
             }
         }
-
-
     }
 }
