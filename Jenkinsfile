@@ -52,7 +52,7 @@ pipeline {
 //                    withCredentials([usernamePassword(credentialsId: 'Gitlab-login', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
 //                        // git config here for the first time run on jenkins
 //                        //without user.email jenkins would complain there is no user email to attach to commit, set only once for jenkins lifetime
-//                        sh 'git config --global user.email "jenkins@example.com"'// global for repository, without for local
+//                        sh 'git config --global user.email "jenkins@example.com"'// global for repository, without for locall
 //                        sh 'git config --global user.name "jenkins"'
 //                        sh 'git status'
 //                        sh 'git branch'
