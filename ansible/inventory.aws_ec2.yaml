@@ -1,0 +1,12 @@
+---
+plugin: aws_ec2
+regions:
+  - us-east-2
+#filters:
+#  tag:Name: dev*
+#  instance_state_name: running
+keyed_groups: # from ansible plugins
+  - key: tags # from attribute of ec2, see the return --graph
+    prefix: server
+  - key: instance_type
+    prefix: instance_type

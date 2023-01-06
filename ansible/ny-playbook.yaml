@@ -1,0 +1,59 @@
+---
+#- name: Wait for ssh connection
+#  hosts: all #docker_server
+#  vars:
+#      ansible_connection: local #execute task from localhost to connect to the hosts:... we get as a parameter from hosts: all #docker_server
+#      ansible_python_interpreter: /usr/bin/python
+#  tasks:
+#    - name: Wait for EC2 instance SSH to become available
+#      wait_for:
+#        state: running
+#        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}' #"{{ ec2_instance_public_ip }}"
+#        port: 22
+#      vars:
+#        ansible_connection: local #execute task from localhost to connect to the hosts:... we get as a parameter from hosts: all #docker_server
+#        ansible_python_interpreter: /usr/bin/python
+
+- name: Wait for ssh connection
+  hosts: all #docker_server
+  vars:
+    ansible_connection: local #execute task from my local machine to connect to the hosts:... we get as a parameter from hosts: all #docker_server
+    ansible_python_interpreter: /usr/bin/python
+  tasks:
+    - name: Wait for EC2 instance SSH to become available
+      wait_for:
+        port: 22
+        delay: 10
+        timeout: 100
+        search_regex: OpenSSH
+        host: '{{ (ansible_ssh_host|default(ansible_host))|default(inventory_hostname) }}'
+
+- name: Install Python3, Docker-Compose, Docker
+  hosts: all #docker_server
+  become: yes
+  gather_facts: false
+  tasks:
+    - name: Ensuring python3 and docker are installed
+      vars:
+        ansible_python_interpreter: /usr/bin/python
+      yum:
+        name:
+          - python3
+          - docker
+        update_cache: yes
+        state: present
+    - name: Install Docker-compose
+      get_url:
+        url: https://github.com/docker/compose/releases/download/1.27.4/docker-compose-{{lookup('pipe', 'uname -s')}}-{{lookup('pipe', 'uname -m')}}
+        dest: /usr/local/bin/docker-compose
+        mode: +x # execute mode to allow execution rights
+    - name: Making sure docker daemon is running
+      systemd:
+          name: docker
+          state: started
+    - name: Install docker python module
+      pip:
+        name:
+          - docker
+          - docker-compose
+
