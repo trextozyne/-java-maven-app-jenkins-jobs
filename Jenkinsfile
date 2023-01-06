@@ -6,10 +6,10 @@ pipeline {
             script {
                 echo 'copying all necessary files to ansible control node'
                 sshagent(['ansible-server-key']) {
-                    sh 'scp -f -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:/root' //'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:/root'
+                    sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:/root'
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                        sh 'scp $keyfile ec2-user@3.14.253.166:/root/ssh-key.pem' // "from ansible.cfg"
+                        sh 'scp -f $keyfile ec2-user@3.14.253.166:/root/ssh-key.pem' // "from ansible.cfg"
                     }
                 }
             }
@@ -28,7 +28,7 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]){
                     remote.user = user
                     remote.identityFile = keyfile
-                    sshCommand remote: remote, command: "ls -lrt"
+                    sshCommand remote: remote, command: "ls -l"
                 }
 
 
