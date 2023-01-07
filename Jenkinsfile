@@ -6,10 +6,10 @@ pipeline {
             script {
                 echo 'copying all necessary files to ansible control node'
                 sshagent(['ansible-server-key']) {
-                    sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:/'
+                    sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:/~'
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                        sh 'scp $keyfile ec2-user@3.14.253.166:/ssh-key.pem' // "from ansible.cfg"
+                        sh 'scp $keyfile ec2-user@3.14.253.166:/~/ssh-key.pem' // "from ansible.cfg"
                     }
                 }
             }
@@ -30,7 +30,7 @@ pipeline {
                     remote.identityFile = keyfile
                     sshCommand remote: remote, command: "ls -l"
 //                    sshCommand remote: remote, command: "export ANSIBLE_CONFIG=ansible.cfg"
-                    sshCommand remote: remote, command: "ansible-playbook my-playbook.yaml"
+                    sshCommand remote: remote, command: "ansible-playbook ~/my-playbook.yaml"
                 }
 
 
