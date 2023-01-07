@@ -6,6 +6,9 @@ pipeline {
             script {
                 echo 'copying all necessary files to ansible control node'
                 sshagent(['ansible-server-key']) {
+                    if (fileExists('~/ssh-key.pem')) {
+                        sh "ssh ec2-user@3.14.253.166 'chmod 777 ~/ssh-key.pem'"
+                    }
                     sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:~/'
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
