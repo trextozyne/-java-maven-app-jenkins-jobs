@@ -6,6 +6,19 @@ pipeline {
                 script {
                     echo 'copying all necessary files to ansible control node'
                     sshagent(['ansible-server-key']) {
+                        def python_output = sh(script: 'python3 -V', returnStdout: true)
+                        def python_version = python_output.split()[1]
+                        def major_minor_version = python_version.split('.')[0..1].join('.')
+
+                        def PYTHON_VERSION = major_minor_version
+                        def boto3 = "/usr/lib/${PYTHON_VERSION}/site-packages/boto3"
+                        def botocore = "/usr/lib/${PYTHON_VERSION}/site-packages/botocore"
+                        if(sh(returnStatus: false, script: "test -f :${boto3}") && sh(returnStatus: false, script: "test -f :${botocore}")) {
+                            sh "ssh ec2-user@3.14.253.166 'cp /usr/local/lib/python${PYTHON_VERSION}/site-packages/${boto3} /usr/lib/python${PYTHON_VERSION}/site-packages/'"
+
+                            sh "ssh ec2-user@3.14.253.166 'cp /usr/local/lib/python${PYTHON_VERSION}/site-packages/${botocore} /usr/lib/python${PYTHON_VERSION}/site-packages/'"
+                        }
+
                         if (sh(returnStatus: true, script: "test -f :~/ssh-key.pem")) {
                             sh "ssh ec2-user@3.14.253.166 'chmod 777 ~/ssh-key.pem'"
                         }
@@ -43,7 +56,7 @@ pipeline {
         stage("set ~/ssh-key.pem permissions to 600") {
             steps {
                 script {
-                    sh "ssh ec2-user@3.14.253.166 'chmod 600 ~/ssh-key.pem'"
+                    sh "ssh ec2-user@3.14.253.166 'sudo chmod 600 ~/ssh-key.pem'"
                 }
             }
         }
