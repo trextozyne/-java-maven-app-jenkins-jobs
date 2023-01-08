@@ -15,27 +15,6 @@ pipeline {
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
                             sh 'scp $keyfile $user@3.14.253.166:~/ssh-key.pem' // "from ansible.cfg"
-
-//                            def python_output = sh(script: 'ssh -i $keyfile $user@3.14.253.166 "python3 -V"', returnStdout: true)
-//                            def python_output = sh(script: 'ssh $user@3.14.253.166 "python3 -V"', returnStdout: true).trim()
-//                            def major_minor_version = python_output.split(' ')[1].split('\\.')[0..1].join('.')
-//
-//                            def PYTHON_VERSION = major_minor_version
-//
-//                            def boto3 = "/usr/lib/python${PYTHON_VERSION}/site-packages/boto3"
-//                            def botocore = "/usr/lib/python${PYTHON_VERSION}/site-packages/botocore"
-//
-//                            def local_boto3 = "/usr/local/lib/python${PYTHON_VERSION}/site-packages/boto3"
-//                            def local_botocore = "/usr/local/lib/python${PYTHON_VERSION}/site-packages/botocore"
-//
-//                            if (sh(script: "ssh ec2-user@3.14.253.166 'test -f ${boto3}'", returnStatus: true) == 1 && sh(script: "ssh ec2-user@3.14.253.166 'test -f ${botocore}'", returnStatus: true) == 1) {
-//
-//                                def scp_cmd_boto3 = "sudo scp -r ${local_boto3} /usr/lib/python${PYTHON_VERSION}/site-packages/"
-//                                def scp_cmd_botocore = "sudo scp -r ${local_botocore} /usr/lib/python${PYTHON_VERSION}/site-packages/"
-//
-//                                sh 'ssh -i $keyfile ec2-user@3.14.253.166 ' + scp_cmd_boto3
-//                                sh 'ssh -i $keyfile ec2-user@3.14.253.166 ' + scp_cmd_botocore
-//                            }
                         }
                     }
                 }
