@@ -3,7 +3,7 @@
 #  hosts: all #docker_server
 #  vars:
 #      ansible_connection: local #execute task from localhost to connect to the hosts:... we get as a parameter from hosts: all #docker_server
-#      ansible_python_interpreter: /usr/local/bin/python
+#      ansible_python_interpreter: /usr/bin/python
 #  tasks:
 #    - name: Wait for EC2 instance SSH to become available
 #      wait_for:
@@ -12,13 +12,13 @@
 #        port: 22
 #      vars:
 #        ansible_connection: local #execute task from localhost to connect to the hosts:... we get as a parameter from hosts: all #docker_server
-#        ansible_python_interpreter: /usr/local/bin/python
+#        ansible_python_interpreter: /usr/bin/python
 
 - name: Wait for ssh connection
   hosts: all #docker_server
   vars:
     ansible_connection: local #execute task from my local machine to connect to the hosts:... we get as a parameter from hosts: all #docker_server
-    ansible_python_interpreter: /usr/local/bin/python
+    ansible_python_interpreter: /usr/bin/python
   tasks:
     - name: Wait for EC2 instance SSH to become available
       wait_for:
@@ -35,7 +35,7 @@
   tasks:
     - name: Ensuring python3 and docker are installed
       vars:
-        ansible_python_interpreter: /usr/local/bin/python
+        ansible_python_interpreter: /usr/bin/python
       yum:
         name:
           - python3
