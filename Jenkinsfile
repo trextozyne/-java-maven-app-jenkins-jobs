@@ -35,6 +35,8 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
                         remote.user = user
                         remote.identityFile = keyfile
+                        sshScript remote: remote, script: "yum-apt-prepare-ansible-server.sh"
+                        //we canhave the .aws/credentials in Jenkins global credentials and it can be done on remote automatically
                         sshCommand remote: remote, command: "ls -l"
 //                    sshCommand remote: remote, command: "export ANSIBLE_CONFIG=ansible.cfg"
                         sshCommand remote: remote, command: "ansible-playbook ~/my-playbook.yaml"
