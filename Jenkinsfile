@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        ANSIBLE_SERVER = "3.14.253.166"
+    }
     stages {
         stage('copy files to ansible server') {
             steps {
@@ -8,14 +11,12 @@ pipeline {
                     sshagent(['ansible-server-key']) {
 
 
-                        sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:~/'
+                        sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@$ANSIBLE_SERVER:~/'
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                            if (sh(script: "ssh ec2-user@3.14.253.166 'test -f ~/ssh-key.pem'", returnStatus: true) != 0) {
-                                sh 'scp $keyfile $user@3.14.253.166:~/ssh-key.pem' // "from ansible.cfg"
+                            if (sh(script: "ssh ec2-user@${ANSIBLE_SERVER} 'test -f ~/ssh-key.pem'", returnStatus: true) != 0) {
+                                sh 'scp $keyfile $user@$ANSIBLE_SERVER:~/ssh-key.pem' // "from ansible.cfg"
                             }
-
-//                            sh "ssh ec2-user@3.14.253.166 'sudo chmod 400 ~/ssh-key.pem'"
                         }
                     }
                 }
@@ -29,7 +30,7 @@ pipeline {
                     // remote receives an object i.e hostname, ipaddress, user, private-key etc
                     def remote = [:]
                     remote.name = "ansible-server"
-                    remote.host = "3.14.253.166"
+                    remote.host = env.ANSIBLE_SERVER
                     remote.allowAnyHosts = true
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'ansible-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
@@ -37,17 +38,10 @@ pipeline {
                         remote.identityFile = keyfile
                         sshCommand remote: remote, command: "ls -l"
 //                    sshCommand remote: remote, command: "export ANSIBLE_CONFIG=ansible.cfg"
-                        sshCommand remote: remote, command: "ansible-playbook -vvv ~/my-playbook.yaml"
+                        sshCommand remote: remote, command: "ansible-playbook ~/my-playbook.yaml"
                     }
                 }
             }
         }
-//        stage("set ~/ssh-key.pem permissions to 600") {
-//            steps {
-//                script {
-//                    sh "ssh ec2-user@3.14.253.166 'sudo chmod 600 ~/ssh-key.pem'"
-//                }
-//            }
-//        }
     }
 }
