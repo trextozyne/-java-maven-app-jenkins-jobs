@@ -10,7 +10,6 @@ pipeline {
                     echo 'copying all necessary files to ansible control node'
                     sshagent(['ansible-server-key']) {
 
-
                         sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@$ANSIBLE_SERVER:~/'
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
