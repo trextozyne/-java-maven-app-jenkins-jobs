@@ -16,7 +16,7 @@ pipeline {
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
                             sh 'scp $keyfile $user@3.14.253.166:~/ssh-key.pem' // "from ansible.cfg"
 
-                            sh "ssh ec2-user@3.14.253.166 'sudo chmod 600 ~/ssh-key.pem'"
+                            sh "ssh ec2-user@3.14.253.166 'sudo chmod 644 ~/ssh-key.pem'"
                         }
                     }
                 }
