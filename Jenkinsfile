@@ -11,7 +11,7 @@ pipeline {
                         sh 'scp -vvv -o StrictHostKeyChecking=no ansible/* ec2-user@3.14.253.166:~/'
 
                         withCredentials([sshUserPrivateKey(credentialsId: 'ec2-server-key', keyFileVariable: 'keyfile', usernameVariable: 'user')]) {
-                            if (sh(script: "ssh ec2-user@3.14.253.166 'test -f ~/ssh-key.pem}'", returnStatus: true) != 0) {
+                            if (sh(script: "ssh ec2-user@3.14.253.166 'test -f ~/ssh-key.pem'", returnStatus: true) != 0) {
                                 sh 'scp $keyfile $user@3.14.253.166:~/ssh-key.pem' // "from ansible.cfg"
                             }
 
