@@ -2,11 +2,10 @@
 This repo consist of several projects that run in a CI/CD pipeline using JENKINS. Docker is installed on an EC2 instance & Jenkins is installed as a Docker Image.
 
 ## Docker installation
-Install Docker on the EC2 after Jenkins is installed by following the instructions on https://serverfault.com/questions/836198/how-to-install-docker-on-aws-ec2-instance-with-ami-ce-ee-update
+Install Docker on the EC2 server installed by following the instructions on https://serverfault.com/questions/836198/how-to-install-docker-on-aws-ec2-instance-with-ami-ce-ee-update
 
 ## Jenkins installation
-Jenkins is installed as a Docker Image, when building an application there's need to build a Docker image of that application in Jenkins, therefore Docker needs to be available in 
-Jenkins. The way to do that is to attach a volume to Jenkins from the host file on the Server(EC2 in this case) itself where Docker is installed hence Docker commands will become
+Jenkins is installed as a Docker Image, when building an application there's need to build a Docker image of that application in Jenkins, therefore Docker needs to be available in Jenkins. The way to do that is to attach a volume to Jenkins from the host file on the Server(EC2 in this case) itself where Docker is installed hence Docker commands will become
 available, next mount docker runtime directories from the Server into the container as a volume. Docker will become available inside the Jenkins container.
 
 1. `docker volume ls`
